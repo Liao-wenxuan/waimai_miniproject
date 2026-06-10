@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+*.egg
+venv/
+.venv/
+
+# Node / Vue
+node_modules/
+frontend/dist/
+.npm/
+.cache/
+
+# Environment
+.env
+*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+mysql_data/
+
+# Misc
+*.log
+.claude/

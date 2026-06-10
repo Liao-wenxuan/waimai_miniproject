@@ -1,0 +1,61 @@
+version: "3.8"
+
+# ============================================
+# 外卖平台 - Docker Compose 部署
+# 启动: docker compose up -d
+# 查看: docker compose ps
+# 停止: docker compose down
+# ============================================
+
+services:
+  # ========== MySQL 数据库 ==========
+  mysql:
+    image: mysql:8.0
+    container_name: food-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-213546}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-food_delivery}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/01-init.sql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-213546}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # ========== Flask 后端 ==========
+  backend:
+    build: ./backend
+    container_name: food-backend
+    restart: always
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-mysql+pymysql://root:213546@mysql:3306/food_delivery?charset=utf8mb4}
+      SECRET_KEY: ${SECRET_KEY:-food-delivery-secret-key-2024}
+      AMAP_KEY: ${AMAP_KEY:-b088bfacf1f1d34edb868779d2075a54}
+    ports:
+      - "5000:5000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  # ========== Vue 前端 (Nginx) ==========
+  frontend:
+    build: ./frontend
+    container_name: food-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:

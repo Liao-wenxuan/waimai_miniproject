@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#C84B31" />
+    <title>Clay · 外卖</title>
+    <style>
+      /* 基础重置 — 设计 Token 在 App.vue 中定义 */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        font-family: Georgia, 'Noto Serif SC', 'Source Han Serif SC', 'STSong', serif;
+        background: #FDF8F0;
+        color: #2C2416;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        line-height: 1.6;
+        overscroll-behavior-y: none;
+      }
+      #app {
+        min-height: 100vh;
+        min-height: 100dvh;
+        max-width: 480px;
+        margin: 0 auto;
+        position: relative;
+        overflow-x: hidden;
+      }
+      /* 桌面端模拟移动端 */
+      @media (min-width: 481px) {
+        #app {
+          border-left: 1px solid #EBE3D6;
+          border-right: 1px solid #EBE3D6;
+          box-shadow: 0 0 60px rgba(44, 36, 22, 0.06);
+        }
+      }
+      /* 滚动条美化 */
+      ::-webkit-scrollbar { width: 4px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #BFB3A4; border-radius: 2px; }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <!-- 静默高德地图 Canvas2D / WebGL 无关警告 -->
+    <script>
+      const _origWarn = console.warn;
+      console.warn = function (...args) {
+        if (args.length > 0) {
+          const msg = typeof args[0] === 'string' ? args[0] : String(args[0]);
+          if (msg.includes('willReadFrequently') || msg.includes('Canvas2D')) return;
+        }
+        _origWarn.apply(console, args);
+      };
+    </script>
+    <!-- 高德地图 JS API -->
+    <script type="text/javascript">
+      window._AMapSecurityConfig = {
+        securityJsCode: "2754c869376479e56c9c05dbf7d6ee49",
+      };
+    </script>
+    <script src="https://webapi.amap.com/maps?v=2.0&key=b088bfacf1f1d34edb868779d2075a54&plugin=AMap.Geocoder,AMap.Driving,AMap.Walking,AMap.MoveAnimation,AMap.PlaceSearch"></script>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

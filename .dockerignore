@@ -1,0 +1,8 @@
+**/node_modules
+**/__pycache__
+**/.git
+**/venv
+**/*.pyc
+**/.claude
+**/taste-skill
+**/README.md
